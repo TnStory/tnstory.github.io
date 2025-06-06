@@ -1,3 +1,6 @@
+# mkdocs
+site/
+
 /.env
 .env.*
 # local env files
