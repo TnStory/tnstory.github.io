@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>Kubernetes Service Discovery Performance - TnStory</title>
+<link href="../../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../css/brands.min.css" rel="stylesheet"/>
+<link href="../../css/solid.min.css" rel="stylesheet"/>
+<link href="../../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../..">TnStory</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../..">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">PoC</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../">Overview</a>
+</li>
+<li>
+<a aria-current="page" class="dropdown-item active" href="./">Kubernetes Service Discovery Performance</a>
+</li>
+<li>
+<a class="dropdown-item" href="../Docker_Image_Optimization_Guide/">Docker Image Optimization Guide</a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../../aboutme/">About Me</a>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../Docker_Image_Optimization_Guide/" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#kubernetes-service-discoverys-benefit-20250315">Kubernetes Service Discovery's benefit [2025/03/15]</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#poc">PoC</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#test-server-spec">Test Server Spec</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#sw-install-in-nextjs-server-pod">S/W install in next.js server pod</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#eks-nextjs-pod-cms-pod-aws-rds-env">EKS (next.js pod --&gt; cms pod --&gt; AWS RDS ) Env</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#tc">TC</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#tc1-1-external-routing">TC1-1 : external routing</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#tc2-internal-routing">TC2 : internal routing</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#conclusion">Conclusion</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<h1 id="kubernetes-service-discoverys-benefit-20250315">Kubernetes Service Discovery's benefit [2025/03/15]</h1>
+<h2 id="poc">PoC</h2>
+<pre><code>- Service Discovery를 사용하여 트패릭/비용 이점을 검증해 본다.
+- MicroService간 통신시 Istio(Service Mesh),gRPC 등을 사용하는 환경에서 당연히 사용해야 하는 Item이지만, 실무에서는 많이 놓치고 있는 실정인것 같다.
+</code></pre>
+<h2 id="test-server-spec">Test Server Spec</h2>
+<pre><code>- AWS EKS Cluster(t3.medium)
+```CMS Server Pod Deployment Spec
+        resources:
+          requests:
+            cpu: 1
+            memory: "1G"
+          limits:
+            cpu: 1
+            memory: "1G"
+```
+```next.js Server Pod Deployment Spec
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 728Mi
+```
+</code></pre>
+<h2 id="sw-install-in-nextjs-server-pod">S/W install in next.js server pod</h2>
+<pre><code>wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey
+chmod +x hey
+
+./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre>
+<h2 id="eks-nextjs-pod-cms-pod-aws-rds-env">EKS (next.js pod --&gt; cms pod --&gt; AWS RDS ) Env</h2>
+<ul>
+<li>DNS : Route53</li>
+<li>Use AWS ALB</li>
+</ul>
+<h2 id="tc">TC</h2>
+<pre><code>- TC1 : next.js --&gt; public dns domain --&gt; cms pod // external routing
+    http://cms.server.com
+
+- TC2 : next.js --&gt; Service Discovery --&gt; cms pod // internal routing
+    http://cms-service.namespace.svc.cluster.local
+    // http://craftcms.easytask.svc.cluster.local
+</code></pre>
+<h3 id="tc1">TC1 호출 흐름 (외부 라우팅)</h3>
+<div class="mermaid">flowchart TD
+    subgraph "EKS Cluster"
+        subgraph "Next.js Pod"
+            next[Next.js Server]
+            style next fill:#1E88E5,stroke:#0D47A1,color:white
+        end
+
+        subgraph "CMS Pod"
+            cms[CMS Server]
+            style cms fill:#43A047,stroke:#2E7D32,color:white
+        end
+    end
+
+    subgraph "AWS Services"
+        route53[Route53\nDNS]
+        style route53 fill:#FF9900,stroke:#FF8000,color:black
+
+        alb[AWS ALB]
+        style alb fill:#FF9900,stroke:#FF8000,color:black
+
+        rds[(AWS RDS)]
+        style rds fill:#FF9900,stroke:#FF8000,color:black
+    end
+
+    next --&gt;|1. API 요청\nhttp://cms.server.com| route53
+    route53 --&gt;|2. DNS 확인| next
+    next --&gt;|3. 요청| alb
+    alb --&gt;|4. 라우팅| cms
+    cms --&gt;|5. 데이터 쿼리| rds
+    rds --&gt;|6. 응답| cms
+    cms --&gt;|7. 응답| alb
+    alb --&gt;|8. 응답| next
+
+    classDef aws fill:#FF9900,stroke:#FF8000,color:black;
+    classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
+
+    class route53,alb,rds aws;
+    class next,cms k8s;
+</div>
+<h3 id="tc2">TC2 호출 흐름 (내부 라우팅)</h3>
+<div class="mermaid">flowchart TD
+    subgraph "EKS Cluster"
+        subgraph "Next.js Pod"
+            next[Next.js Server]
+            style next fill:#1E88E5,stroke:#0D47A1,color:white
+        end
+
+        k8ssd[Kubernetes\nService Discovery]
+        style k8ssd fill:#326CE5,stroke:#2350BD,color:white
+
+        subgraph "CMS Pod"
+            cms[CMS Server]
+            style cms fill:#43A047,stroke:#2E7D32,color:white
+        end
+    end
+
+    subgraph "AWS Services"
+        rds[(AWS RDS)]
+        style rds fill:#FF9900,stroke:#FF8000,color:black
+    end
+
+    next --&gt;|1. API 요청\nhttp://cms-service.namespace.svc.cluster.local| k8ssd
+    k8ssd --&gt;|2. 서비스 확인| next
+    next --&gt;|3. 직접 요청| cms
+    cms --&gt;|4. 데이터 쿼리| rds
+    rds --&gt;|5. 응답| cms
+    cms --&gt;|6. 응답| next
+
+    classDef aws fill:#FF9900,stroke:#FF8000,color:black;
+    classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
+
+    class rds aws;
+    class next,cms,k8ssd k8s;
+</div>
+<h2 id="tc1-1-external-routing">TC1-1 : external routing</h2>
+<pre><code class="language-TC1-1">./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        23.0148 secs
+  Slowest:      2.4150 secs
+  Fastest:      0.8270 secs
+  Average:      1.4285 secs
+  Requests/sec: 2.0856
+
+
+Response time histogram:
+  0.827 [1]     |■■■
+  0.986 [1]     |■■■
+  1.145 [7]     |■■■■■■■■■■■■■■■■■■■■■■■
+  1.303 [12]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.462 [8]     |■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.621 [7]     |■■■■■■■■■■■■■■■■■■■■■■■
+  1.780 [7]     |■■■■■■■■■■■■■■■■■■■■■■■
+  1.939 [1]     |■■■
+  2.097 [3]     |■■■■■■■■■■
+  2.256 [0]     |
+  2.415 [1]     |■■■
+
+
+Latency distribution:
+  10% in 1.0986 secs
+  25% in 1.2369 secs
+  50% in 1.4086 secs
+  75% in 1.6216 secs
+  90% in 2.0125 secs
+  95% in 2.0791 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0001 secs, 0.8270 secs, 2.4150 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0008 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
+  resp wait:    1.3812 secs, 0.8249 secs, 2.1124 secs
+  resp read:    0.0472 secs, 0.0016 secs, 0.3786 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<pre><code class="language-TC1-2"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        23.3135 secs
+  Slowest:      2.3849 secs
+  Fastest:      0.6418 secs
+  Average:      1.4337 secs
+  Requests/sec: 2.0589
+
+
+Response time histogram:
+  0.642 [1]     |■■
+  0.816 [0]     |
+  0.990 [1]     |■■
+  1.165 [6]     |■■■■■■■■■■■■■■
+  1.339 [10]    |■■■■■■■■■■■■■■■■■■■■■■■■
+  1.513 [17]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.688 [4]     |■■■■■■■■■
+  1.862 [5]     |■■■■■■■■■■■■
+  2.036 [1]     |■■
+  2.211 [2]     |■■■■■
+  2.385 [1]     |■■
+
+
+Latency distribution:
+  10% in 1.1443 secs
+  25% in 1.2131 secs
+  50% in 1.4042 secs
+  75% in 1.5631 secs
+  90% in 1.9996 secs
+  95% in 2.1962 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0003 secs, 0.6418 secs, 2.3849 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0004 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0056 secs
+  resp wait:    1.3728 secs, 0.6354 secs, 2.3065 secs
+  resp read:    0.0602 secs, 0.0015 secs, 0.4777 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<pre><code class="language-TC1-3"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        22.6327 secs
+  Slowest:      2.1081 secs
+  Fastest:      1.0684 secs
+  Average:      1.3994 secs
+  Requests/sec: 2.1208
+
+
+Response time histogram:
+  1.068 [1]     |■■■■
+  1.172 [11]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.276 [9]     |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.380 [6]     |■■■■■■■■■■■■■■■■■■■■■■
+  1.484 [1]     |■■■■
+  1.588 [10]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.692 [5]     |■■■■■■■■■■■■■■■■■■
+  1.796 [1]     |■■■■
+  1.900 [1]     |■■■■
+  2.004 [1]     |■■■■
+  2.108 [2]     |■■■■■■■
+
+
+Latency distribution:
+  10% in 1.1136 secs
+  25% in 1.1859 secs
+  50% in 1.3722 secs
+  75% in 1.5662 secs
+  90% in 1.8879 secs
+  95% in 2.0226 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0000 secs, 1.0684 secs, 2.1081 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0012 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0001 secs
+  resp wait:    1.3629 secs, 1.0391 secs, 2.0026 secs
+  resp read:    0.0364 secs, 0.0017 secs, 0.2389 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<h2 id="tc2-internal-routing">TC2 : internal routing</h2>
+<pre><code class="language-TC2-1">./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        20.8464 secs
+  Slowest:      2.0879 secs
+  Fastest:      0.6937 secs
+  Average:      1.2629 secs
+  Requests/sec: 2.3026
+
+
+Response time histogram:
+  0.694 [1]     |■■
+  0.833 [0]     |
+  0.973 [1]     |■■
+  1.112 [9]     |■■■■■■■■■■■■■■■■■■■■
+  1.251 [18]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.391 [8]     |■■■■■■■■■■■■■■■■■■
+  1.530 [5]     |■■■■■■■■■■■
+  1.670 [3]     |■■■■■■■
+  1.809 [0]     |
+  1.948 [1]     |■■
+  2.088 [2]     |■■■■
+
+
+Latency distribution:
+  10% in 1.0148 secs
+  25% in 1.1220 secs
+  50% in 1.2114 secs
+  75% in 1.3546 secs
+  90% in 1.6184 secs
+  95% in 2.0818 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0000 secs, 0.6937 secs, 2.0879 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0004 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
+  resp wait:    1.2377 secs, 0.6902 secs, 2.0801 secs
+  resp read:    0.0251 secs, 0.0012 secs, 0.3755 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<pre><code class="language-TC2-2"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        19.5824 secs
+  Slowest:      1.9950 secs
+  Fastest:      0.6106 secs
+  Average:      1.2080 secs
+  Requests/sec: 2.4512
+
+
+Response time histogram:
+  0.611 [1]     |■■■
+  0.749 [0]     |
+  0.887 [2]     |■■■■■
+  1.026 [6]     |■■■■■■■■■■■■■■■■
+  1.164 [15]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.303 [13]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.441 [4]     |■■■■■■■■■■■
+  1.580 [3]     |■■■■■■■■
+  1.718 [2]     |■■■■■
+  1.857 [0]     |
+  1.995 [2]     |■■■■■
+
+
+Latency distribution:
+  10% in 0.9748 secs
+  25% in 1.0636 secs
+  50% in 1.1740 secs
+  75% in 1.3019 secs
+  90% in 1.6464 secs
+  95% in 1.9126 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0000 secs, 0.6106 secs, 1.9950 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0003 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0001 secs
+  resp wait:    1.1801 secs, 0.6088 secs, 1.9930 secs
+  resp read:    0.0278 secs, 0.0015 secs, 0.2773 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<pre><code class="language-TC2-3"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+
+Summary:
+  Total:        20.0755 secs
+  Slowest:      2.0698 secs
+  Fastest:      0.6925 secs
+  Average:      1.2348 secs
+  Requests/sec: 2.3910
+
+
+Response time histogram:
+  0.693 [1]     |■■■
+  0.830 [0]     |
+  0.968 [3]     |■■■■■■■■■■
+  1.106 [12]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.243 [11]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.381 [10]    |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.519 [7]     |■■■■■■■■■■■■■■■■■■■■■■■
+  1.657 [1]     |■■■
+  1.794 [1]     |■■■
+  1.932 [0]     |
+  2.070 [2]     |■■■■■■■
+
+
+Latency distribution:
+  10% in 0.9806 secs
+  25% in 1.0984 secs
+  50% in 1.2104 secs
+  75% in 1.3768 secs
+  90% in 1.6011 secs
+  95% in 1.9678 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0001 secs, 0.6925 secs, 2.0698 secs
+  DNS-lookup:   0.0001 secs, 0.0000 secs, 0.0015 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0004 secs
+  resp wait:    1.2001 secs, 0.6906 secs, 2.0635 secs
+  resp read:    0.0345 secs, 0.0014 secs, 0.4255 secs
+
+Status code distribution:
+  [200] 48 responses
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<ul>
+<li><strong>TC1 (External Routing)</strong></li>
+<li>In each execution, the average response time is approximately 1.40 seconds.</li>
+<li>The total number of requests (48 responses) and the requests per second (about 2.08 to 2.12) remain consistent.</li>
+<li>The response time histogram shows the fastest response at around 0.64 seconds, with the slowest reaching near 2.4 seconds, indicating some variability.</li>
+<li>
+<p>Additional overhead may be present in DNS handling and connection setup.</p>
+</li>
+<li>
+<p><strong>TC2 (Internal Routing)</strong></p>
+</li>
+<li>The average response time improves to approximately 1.21–1.26 seconds.</li>
+<li>The requests per second improve slightly to around 2.30–2.45.</li>
+<li>The response time distribution is more uniform and the maximum latency is marginally lower (around 2.0 seconds).</li>
+<li>Reduced DNS lookups and lower network hops in internal communication contribute to this performance gain.</li>
+</ul>
+<p><strong>Conclusion:</strong>
+Internal routing (TC2) shows modest improvements over external routing (TC1) in both response times and throughput, which can positively impact the overall user experience in real-time service environments.</p></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../../js/base.js"></script>
+<script src="../../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>
