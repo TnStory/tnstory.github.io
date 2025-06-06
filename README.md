@@ -1,5 +1,5 @@
 # tnstory.github.io
 
 ## 배포 방법
-`mkdocs gh-deploy --config-file ./mkdocs.yml --remote-branch main`
+`mkdocs gh-deploy --remote-branch gh-pages --config-file ./mkdocs.yml`
 
