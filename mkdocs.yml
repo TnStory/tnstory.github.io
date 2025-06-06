@@ -1,0 +1,14 @@
+site_name: TnStory
+
+
+nav:
+  - Home: index.md
+  - PoC:
+      - Overview: PoC.md
+      - Kubernetes Service Discovery Performance: PoC/Kubernetes_ServiceDiscovery_Performance_PoC.md
+      - Docker Image Optimization Guide: PoC/Docker_Image_Optimization_Guide.md
+  - About Me: aboutme.md
+
+plugins:
+  - search
+  - mermaid2
