@@ -8,6 +8,7 @@ theme:
   name: material
   custom_dir: overrides  # docs/overrides 아님!
   favicon: assets/images/favicon_io/favicon.ico
+  logo: assets/images/favicon_io/android-chrome-192x192.png
 
 extra:
   meta:
@@ -22,6 +23,9 @@ extra:
 
 extra_javascript:
   - robots.txt
+
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
   - search
