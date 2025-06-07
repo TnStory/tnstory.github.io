@@ -1,23 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://tnstory.github.io/</loc>
-         <lastmod>2025-06-07</lastmod>
+        <loc>https://tnstory.github.io/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/"/>
     </url>
     <url>
-         <loc>https://tnstory.github.io/PoC/</loc>
-         <lastmod>2025-06-07</lastmod>
+        <loc>https://tnstory.github.io/PoC/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/"/>
     </url>
     <url>
-         <loc>https://tnstory.github.io/aboutme/</loc>
-         <lastmod>2025-06-07</lastmod>
+        <loc>https://tnstory.github.io/aboutme/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/aboutme/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/aboutme/"/>
     </url>
     <url>
-         <loc>https://tnstory.github.io/PoC/Docker_Image_Optimization_Guide/</loc>
-         <lastmod>2025-06-07</lastmod>
+        <loc>https://tnstory.github.io/PoC/Docker_Image_Optimization_Guide/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/Docker_Image_Optimization_Guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/Docker_Image_Optimization_Guide/"/>
     </url>
     <url>
-         <loc>https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/</loc>
-         <lastmod>2025-06-07</lastmod>
+        <loc>https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/"/>
+    </url>
+    <url>
+        <loc>https://tnstory.github.io/en/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/"/>
+    </url>
+    <url>
+        <loc>https://tnstory.github.io/en/PoC/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/"/>
+    </url>
+    <url>
+        <loc>https://tnstory.github.io/en/aboutme/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/aboutme/"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/aboutme/"/>
+    </url>
+    <url>
+        <loc>https://tnstory.github.io/en/PoC/Docker_Image_Optimization_Guide/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/Docker_Image_Optimization_Guide/"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/Docker_Image_Optimization_Guide/"/>
+    </url>
+    <url>
+        <loc>https://tnstory.github.io/en/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/</loc>
+        <lastmod>2025-06-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://tnstory.github.io/en/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/"/>
     </url>
 </urlset>
