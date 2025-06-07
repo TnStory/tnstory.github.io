@@ -49,7 +49,7 @@ plugins:
           name: 한국어
           default: true
           build: true
-          site_name: "it뒷담"
+          site_name: "it 뒷담"
         - locale: en
           name: English
           build: true
