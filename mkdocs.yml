@@ -1,5 +1,38 @@
-site_name: TnStory
+site_name: it뒷담
+site_url: https://tnstory.github.io/
+site_description: "it뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
+site_author: "MinBae Lee"
 
+
+theme:
+  name: material
+  custom_dir: overrides  # docs/overrides 아님!
+  favicon: assets/images/favicon_io/favicon.ico
+
+extra:
+  meta:
+    description: "it뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
+    keywords: "it뒷담, Kubernetes, Cloud, GitOps, CNCF, AI, SpringBoot"
+    author: "MinBae Lee"
+
+  social:
+    - icon: fontawesome/brands/github
+      link: https://tnstory.github.io/
+      name: GitHub
+
+extra_javascript:
+  - robots.txt
+
+plugins:
+  - search
+  - mermaid2
+  # - sitemap:
+  #     changefreq: monthly
+  #     priority: 0.5
+
+markdown_extensions:
+  - toc:
+      permalink: true
 
 nav:
   - Home: index.md
@@ -9,6 +42,4 @@ nav:
       - Docker Image Optimization Guide: PoC/Docker_Image_Optimization_Guide.md
   - About Me: aboutme.md
 
-plugins:
-  - search
-  - mermaid2
+

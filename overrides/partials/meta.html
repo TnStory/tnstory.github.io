@@ -1,0 +1,23 @@
+{# overrides/partials/meta.html #}
+{% if page.meta %}
+  {% if page.meta.description %}
+    <meta name="description" content="{{ page.meta.description }}">
+    <meta property="og:description" content="{{ page.meta.description }}">
+    <meta name="twitter:description" content="{{ page.meta.description }}">
+  {% endif %}
+  {% if page.meta.keywords %}
+    <meta name="keywords" content="{{ page.meta.keywords }}">
+  {% endif %}
+  {% if page.meta.author %}
+    <meta name="author" content="{{ page.meta.author }}">
+  {% endif %}
+{% endif %}
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ page.title }} | {{ config.site_name }}">
+<meta property="og:url" content="{{ page.abs_url }}">
+<meta property="og:image" content="{{ config.site_url }}assets/images/favicon_io/android-chrome-192x192.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page.title }} | {{ config.site_name }}">
+<meta name="twitter:image" content="{{ config.site_url }}assets/images/favicon_io/android-chrome-192x192.png">
