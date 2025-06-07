@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tnstory.github.io/sitemap.xml
