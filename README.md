@@ -10,6 +10,9 @@
 
 - pip install mkdocs-material
 - pip install mkdocs-mermaid2-plugin
+- pip install mkdocs-static-i18n
+- pip install --upgrade mkdocs-static-i18n
+
 
 ## local 
 `mkdocs serve`

@@ -5,14 +5,14 @@ keywords: it뒷담, Kubernetes, Cloud, GitOps, CNCF, AI, SpringBoot
 author: MinBae Lee
 ---
 
-# Welcome to it뒷담
+# it뒷담에 오신 것을 환영합니다
 
-This is a personal record page, where I aim to analyze technology trends from a subjective perspective.
+이곳은 기술 트렌드를 주관적인 시각으로 분석하고 기록하는 개인 공간입니다.
 
 ## 관심 분야
 
 * `Kubernetes`
-* `AWS Architect`
+* `AWS 아키텍처`
 * `GitOps`
 * `CNCF`
 * `SpringBoot`

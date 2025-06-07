@@ -9,6 +9,14 @@ theme:
   custom_dir: overrides  # docs/overrides 아님!
   favicon: assets/images/favicon_io/favicon.ico
   logo: assets/images/favicon_io/android-chrome-192x192.png
+  language: ko
+  features:
+    - navigation.tabs
+    - navigation.top
+    - toc.integrate
+    - search.highlight
+    - search.share
+
 
 extra:
   meta:
@@ -20,9 +28,14 @@ extra:
     - icon: fontawesome/brands/github
       link: https://tnstory.github.io/
       name: GitHub
+  alternate:
+    - name: 한국어
+      link: /
+      lang: ko
+    - name: English
+      link: /en/
+      lang: en
 
-extra_javascript:
-  - robots.txt
 
 extra_css:
   - stylesheets/extra.css
@@ -30,6 +43,22 @@ extra_css:
 plugins:
   - search
   - mermaid2
+  - i18n:
+      languages:
+        - locale: ko
+          name: 한국어
+          default: true
+          build: true
+          site_name: "it뒷담"
+        - locale: en
+          name: English
+          build: true
+          site_name: "it Gossip"
+      docs_structure: folder
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+
   # - sitemap:
   #     changefreq: monthly
   #     priority: 0.5

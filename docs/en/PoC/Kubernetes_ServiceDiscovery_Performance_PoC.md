@@ -1,20 +1,22 @@
 # Kubernetes Service Discovery's benefit [2025/03/15]
 
 ## PoC
-    - Service Discovery를 사용하여 트패릭/비용 이점을 검증해 본다.
-    - MicroService간 통신시 Istio(Service Mesh),gRPC 등을 사용하는 환경에서   
-    당연히 사용해야 하는 Item이지만, 실무에서는 많이 놓치고 있는 실정인것 같다.
+    - Verify traffic and cost advantages using Service Discovery.
+    - Although this is an essential item in environments   
+    where communication between microservices involves Istio (Service Mesh),   
+    gRPC, etc., it is often overlooked in real-world scenarios.
 
 <span style="color:#1976d2; font-weight:bold; font-size:1.1em;">
-결론 : 처음부터 Kubernetes FQDN 사용하도록 설계 하자.
+Conclusion: Design to use Kubernetes FQDN from the beginning.
 </span><br>
-Kubernetes FQDN의 기본 구조  
-<서비스 이름>.<네임스페이스>.svc.cluster.local  
+The basic structure of Kubernetes FQDN  
+<service name>.<namespace>.svc.cluster.local  
 my-service.default.svc.cluster.local
+
 
 ## Test Server Spec
     - AWS EKS Cluster(t3.medium)
-      CMS Server Pod Deployment Spec
+    CMS Server Pod Deployment Spec
             resources:
               requests:
                 cpu: 1
@@ -22,8 +24,8 @@ my-service.default.svc.cluster.local
               limits:
                 cpu: 1
                 memory: "1G"
-
-        next.js Server Pod Deployment Spec
+    
+    next.js Server Pod Deployment Spec
             resources:
               requests:
                 cpu: 200m
@@ -31,10 +33,10 @@ my-service.default.svc.cluster.local
               limits:
                 cpu: 500m
                 memory: 728Mi
-    
 
 
-## S/W install in next.js server Pod
+
+## S/W install in next.js server pod
 ```
 wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey
 chmod +x hey
@@ -43,7 +45,7 @@ chmod +x hey
 ```
 
 
-## EKS (next.js Pod --> CMS Pod --> AWS RDS ) Env
+## EKS (next.js pod --> CMS Pod --> AWS RDS ) Env
   - DNS : Route53
   - Use AWS ALB
 
@@ -56,7 +58,7 @@ chmod +x hey
         http://cms-service.namespace.svc.cluster.local
         // http://craftcms.easytask.svc.cluster.local
 
-### TC1 호출 흐름 (외부 라우팅)
+### TC1 호출 흐름 (internal routing)
 
 ```mermaid
 flowchart TD
@@ -99,7 +101,7 @@ flowchart TD
     class next,cms k8s;
 ```
 
-### TC2 호출 흐름 (내부 라우팅)
+### TC2 호출 흐름 (internal routing)
 
 ```mermaid
 flowchart TD
@@ -405,28 +407,20 @@ Status code distribution:
   [200] 48 responses
 ```
 
-## 결론
 
-### TC1 (외부 라우팅)
+## Conclusion 
+- **TC1 (External Routing)**
+  - In each execution, the average response time is approximately 1.40 seconds.
+  - The total number of requests (48 responses) and the requests per second (about 2.08 to 2.12) remain consistent.
+  - The response time histogram shows the fastest response at around 0.64 seconds, with the slowest reaching near 2.4 seconds, indicating some variability.
+  - Additional overhead may be present in DNS handling and connection setup.
 
-각 실행에서 평균 응답 시간은 약 1.40초입니다.
+- **TC2 (Internal Routing)**
+  - The average response time improves to approximately 1.21–1.26 seconds.
+  - The requests per second improve slightly to around 2.30–2.45.
+  - The response time distribution is more uniform and the maximum latency is marginally lower (around 2.0 seconds).
+  - Reduced DNS lookups and lower network hops in internal communication contribute to this performance gain.
 
-전체 응답 수(48건)와 초당 요청 수(약 2.08~2.12)는 일정하게 유지됩니다.
+**Conclusion:**
+Internal routing (TC2) shows modest improvements over external routing (TC1) in both response times and throughput, which can positively impact the overall user experience in real-time service environments.
 
-응답 시간 히스토그램을 보면 가장 빠른 응답은 약 0.64초, 가장 느린 응답은 약 2.4초로, 응답 시간에 다소 변동성이 있습니다.
-
-DNS 처리 및 연결 설정 과정에서의 오버헤드가 존재할 수 있습니다.
-
-### TC2 (내부 라우팅)
-
-평균 응답 시간이 약 1.21~1.26초로 개선됩니다.
-
-초당 요청 수는 약 2.30~2.45로 소폭 증가합니다.
-
-응답 시간 분포는 좀 더 균일하고, 최대 지연 시간도 약 2.0초로 다소 낮아집니다.
-
-내부 통신에서의 DNS 조회 감소 및 네트워크 홉 수 감소가 성능 향상에 기여합니다.
-
-## 종합 결론:
-
-내부 라우팅(TC2)은 외부 라우팅(TC1) 대비 응답 시간과 처리량 면에서 소폭 향상된 성능을 보이며, 이는 실시간 서비스 환경에서 사용자 경험을 긍정적으로 향상시킬 수 있습니다.

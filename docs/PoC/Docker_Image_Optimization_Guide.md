@@ -1,75 +1,81 @@
-# Docker Image Optimization Guide
+# 도커 이미지 최적화 가이드
 
-Docker image optimization and summarizes various methods to achieve it. It also covers the pros and cons of Gradle Jib and GraalVM for Java applications, along with considerations for deploying third-party applications.
+이 문서는 도커 이미지 최적화의 다양한 방법을 정리한 가이드입니다.   
+Java 애플리케이션을 위한 Gradle Jib, GraalVM의 장단점과 서드파티 애플리케이션 배포 시 고려사항도 함께 다룹니다.
 
----
-
-## 1. Why Optimize?
-
-- **Faster Deployment:**  
-  A smaller image size reduces network transfer time, thereby speeding up the overall deployment process.
-
-- **Enhanced Security:**  
-  Removing unnecessary packages and files minimizes the attack surface.
-
-- **Resource Efficiency:**  
-  Optimizing images reduces storage requirements and lowers memory usage during container execution.
+<span style="color:#1976d2; font-weight:bold; font-size:1.1em;">
+결론 : Java는 Gradle Jib 사용하는 것이 최적화 잘 되고, 간단. <br>
+BuildPack(CNCF 산하의 공식 표준)도 고려해 보자.
+</span><br>
 
 ---
 
-## 2. Optimization Methods
+## 1. 왜 최적화해야 할까?
 
-- **Use Minimal Base Images:**  
-  Opt for lightweight base images such as Alpine or distroless.
+- **더 빠른 배포:**  
+  이미지 크기가 작아지면 네트워크 전송 시간이 줄어 전체 배포 속도가 빨라진다.
 
-- **Multi-Stage Builds:**  
-  Separate the build tools from the runtime environment to ensure that only the necessary files are included in the final image.
+- **보안 강화:**  
+  불필요한 패키지와 파일을 제거하면 공격 표면이 줄어든다.
 
-- **Cache Optimization & Command Consolidation:**  
-  Combine `RUN` commands to reduce the number of layers and efficiently utilize build cache.
-
-- **Remove Unnecessary Files:**  
-  Delete temporary files and cache data after the build process.
-
-- **Use .dockerignore:**  
-  Exclude unnecessary files from the build context to improve build speed.
-
-- **Utilize Docker Slim:**  
-  Docker Slim analyzes your existing images and removes redundant files and configurations, significantly reducing the image size.  
-  [Learn more](https://github.com/slimtoolkit/slim)
+- **리소스 효율성:**  
+  이미지를 최적화하면 저장 공간과 컨테이너 실행 시 메모리 사용량이 줄어든다.
 
 ---
 
-## 3. Java Application Optimization
+## 2. 최적화 방법
+
+- **최소한의 베이스 이미지 사용:**  
+  Alpine이나 distroless와 같은 경량 베이스 이미지를 사용.
+
+- **멀티스테이지 빌드:**  
+  빌드 도구와 런타임 환경을 분리해 최종 이미지에 필요한 파일만 포함.
+
+- **캐시 최적화 및 명령어 통합:**  
+  `RUN` 명령을 합쳐 레이어 수를 줄이고 빌드 캐시를 효율적으로 활용.
+
+- **불필요한 파일 제거:**  
+  빌드 후 임시 파일과 캐시 데이터를 삭제.
+
+- **.dockerignore 사용:**  
+  빌드 컨텍스트에서 불필요한 파일을 제외해 빌드 속도를 높인다.
+
+- **Docker Slim 활용:**  
+  Docker Slim은 기존 이미지를 분석해 불필요한 파일과 설정을 제거, 이미지 크기를 크게 줄여준다.  
+  [자세히 보기](https://github.com/slimtoolkit/slim)
+
+---
+
+## 3. Java 애플리케이션 최적화
 
 ### Gradle Jib
 
-- **Advantages:**
-  - Enables container image creation directly from the Gradle build without the need for a Dockerfile.
-  - Leverages build cache to shorten image creation time and automatically optimizes image layers.
+- **장점:**
+  - Dockerfile 없이 Gradle 빌드에서 바로 컨테이너 이미지를 생성할 수 있다.
+  - 빌드 캐시를 활용해 이미지 생성 시간을 단축하고, 이미지 레이어를 자동으로 최적화한다.
 
-- **Disadvantages:**
-  - May be limited when extensive customization is required.
-  - Offers a higher level of abstraction compared to Dockerfiles, making granular control more challenging.
+- **단점:**
+  - 커스터마이징이 많이 필요할 경우 한계가 있을 수 있다.
+  - Dockerfile에 비해 추상화 수준이 높아 세밀한 제어가 어렵다.
 
-[Gradle Jib Plugin on GitHub](https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin)
+[Gradle Jib 플러그인 GitHub](https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin)
 
 ### GraalVM
 
-- **Advantages:**
-  - Native image generation can dramatically improve application startup speed and reduce memory usage.
-  - Offers fast boot times and low runtime overhead.
+- **장점:**
+  - 네이티브 이미지를 생성하면 애플리케이션 시작 속도가 빨라지고 메모리 사용량이 줄어든다.
+  - 빠른 부팅과 낮은 런타임 오버헤드를 제공한다.
 
-- **Disadvantages:**
-  - Native image generation can be time-consuming and complicates the build process.
-  - Restrictions on dynamic features or reflection may require code modifications or additional configurations.
+- **단점:**
+  - 네이티브 이미지 생성 과정이 오래 걸리고 빌드가 복잡해질 수 있다.
+  - 동적 기능이나 리플렉션 사용에 제약이 있어 코드 수정이나 추가 설정이 필요할 수 있다.
 
-[GraalVM Official Website](https://www.graalvm.org/)
+[GraalVM 공식 사이트](https://www.graalvm.org/)
 
 ---
 
-## 4. Considerations for Deploying Third-Party Applications
+## 4. 서드파티 애플리케이션 배포 시 고려사항
 
-- It is recommended to leverage the deployment methods and images provided by third parties.
-- Attempting custom optimizations may have limited benefits while increasing complexity and deployment difficulty.
-- Based on practical experience, it is more efficient to use the provided images as-is or with minimal modifications for third-party applications.
+- 서드파티에서 제공하는 배포 방식과 이미지를 그대로 활용하는 것이 좋다(이미 최적화됨).
+- 직접 최적화를 시도하면 복잡성만 높아지고 실질적인 이득은 적을 수 있다.
+- 실무 경험상, 서드파티 이미지는 그대로 사용하거나 최소한의 수정만 하는 것이 효율적이다.

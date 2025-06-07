@@ -1,14 +1,14 @@
 # About Me
 
-진정한 DevSecOps는 개발 첫 순간부터 시작된다.
+True DevSecOps begins from the very first moment of development.
 
 ## Contact
 <table>
   <tr>
     <td style="vertical-align:middle;">
       <ul style="list-style:none; padding-left:20px; margin:0;">
-        <li>📞 010-3891-9041</li>
-        <li>📧 lmb0724@gmail.com</li>
+        <li><img src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/svgs/solid/phone.svg" alt="Phone" width="24"> 010-3891-9041</li>
+        <li><img src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/svgs/solid/envelope.svg" alt="Email" width="24"> lmb0724@gmail.com</li>
       </ul>
     </td>
     <td style="vertical-align:middle; padding-left:20px;">
