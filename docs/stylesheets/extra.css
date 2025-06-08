@@ -12,3 +12,33 @@ body,
   height: 2.4rem !important;  /* 기본은 24px 정도 */
   width: auto;
 }
+
+/* ───────── 기본(라이트) ───────── */
+:root {
+  /* 배경 + 글자 */
+  --md-code-bg-color:   #f7f9fa;   /* 연한 회색 */
+  --md-code-fg-color:   #374151;   /* 기본 글자색 */
+
+  /* 토큰 색상(필요한 것만 셋팅) */
+  --md-code-hl-keyword-color:   #1976d2; /* keyword (파란색) */
+  --md-code-hl-string-color:    #c62828; /* string   (빨간색) */
+  --md-code-hl-number-color:    #2e7d32; /* number   (초록색) */
+}
+
+/* ───────── 다크(Slate) ───────── */
+[data-md-color-scheme="slate"] {
+  --md-code-bg-color: #1e1e1e;
+  --md-code-fg-color: #d6d6d6;
+
+  --md-code-hl-keyword-color:   #4dabf7;
+  --md-code-hl-string-color:    #ff867c;
+  --md-code-hl-number-color:    #81c784;
+}
+
+
+/* 코드블록 왼쪽에 컬러 스트립 */
+.md-typeset pre > code {
+  border-left: .5rem solid var(--md-primary-fg-color); /* 기본 색으로 통일 */
+  padding-left: 1rem;      /* 글자가 너무 붙지 않도록 여백 */
+  border-radius: .25rem;   /* 살짝 둥글게 (선택) */
+}
