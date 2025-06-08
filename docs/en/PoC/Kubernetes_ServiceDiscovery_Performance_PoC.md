@@ -16,28 +16,34 @@ my-service.default.svc.cluster.local
 
 ## Test Server Spec
     - AWS EKS Cluster(t3.medium)
-    CMS Server Pod Deployment Spec
-            resources:
-              requests:
-                cpu: 1
-                memory: "1G"
-              limits:
-                cpu: 1
-                memory: "1G"
-    
-    next.js Server Pod Deployment Spec
-            resources:
-              requests:
-                cpu: 200m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 728Mi
+**CMS Server Pod Deployment Spec**
+
+```yaml
+resources:
+  requests:
+    cpu: 1
+    memory: "1G"
+  limits:
+    cpu: 1
+    memory: "1G"
+```
+**next.js Server Pod Deployment Spec**
+
+```yaml
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 728Mi
+```
 
 
 
 ## S/W install in next.js server pod
-```
+
+```bash
 wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey
 chmod +x hey
 
@@ -46,20 +52,20 @@ chmod +x hey
 
 
 ## EKS (next.js pod --> CMS Pod --> AWS RDS ) Env
+
   - DNS : Route53
   - Use AWS ALB
 
 
 ## TC
+
     - TC1 : next.js --> public dns domain --> CMS Pod // external routing
         http://cms.server.com
 
     - TC2 : next.js --> Service Discovery --> CMS Pod // internal routing
         http://cms-service.namespace.svc.cluster.local
-        // http://craftcms.easytask.svc.cluster.local
 
 ### TC1 호출 흐름 (internal routing)
-
 ```mermaid
 flowchart TD
     subgraph "EKS Cluster"
@@ -75,7 +81,7 @@ flowchart TD
     end
     
     subgraph "AWS Services"
-        route53[Route53\nDNS]
+        route53[Route53<br>DNS]
         style route53 fill:#FF9900,stroke:#FF8000,color:black
         
         alb[AWS ALB]
@@ -85,14 +91,14 @@ flowchart TD
         style rds fill:#FF9900,stroke:#FF8000,color:black
     end
     
-    next -->|1. API 요청\nhttp://cms.server.com| route53
-    route53 -->|2. DNS 확인| next
-    next -->|3. 요청| alb
-    alb -->|4. 라우팅| cms
-    cms -->|5. 데이터 쿼리| rds
-    rds -->|6. 응답| cms
-    cms -->|7. 응답| alb
-    alb -->|8. 응답| next
+    next -->|1\. DNS Query| route53
+    route53 -->|2\. DNS Resolve| next
+    next -->|3\. API Req<br>cms.server.com| alb
+    alb -->|4\. Route| cms
+    cms -->|5\. Data Fetch| rds
+    rds -->|6\. Res| cms
+    cms -->|7\. Res| alb
+    alb -->|8\. Res| next
 
     classDef aws fill:#FF9900,stroke:#FF8000,color:black;
     classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
@@ -102,7 +108,6 @@ flowchart TD
 ```
 
 ### TC2 호출 흐름 (internal routing)
-
 ```mermaid
 flowchart TD
     subgraph "EKS Cluster"
@@ -111,7 +116,7 @@ flowchart TD
             style next fill:#1E88E5,stroke:#0D47A1,color:white
         end
         
-        k8ssd[Kubernetes\nService Discovery]
+        k8ssd[Kubernetes<br>Service Discovery]
         style k8ssd fill:#326CE5,stroke:#2350BD,color:white
         
         subgraph "CMS Pod"
@@ -125,12 +130,12 @@ flowchart TD
         style rds fill:#FF9900,stroke:#FF8000,color:black
     end
     
-    next -->|1. API 요청\nhttp://cms-service.namespace.svc.cluster.local| k8ssd
-    k8ssd -->|2. 서비스 확인| next
-    next -->|3. 직접 요청| cms
-    cms -->|4. 데이터 쿼리| rds
-    rds -->|5. 응답| cms
-    cms -->|6. 응답| next
+    next -->|1\. FQDN Query| k8ssd
+    k8ssd -->|2\. FQDN Resolve| next
+    next -->|3\. cms-service.namespace.svc.cluster.local| cms
+    cms -->|4\. Data Fetch| rds
+    rds -->|5\. Res| cms
+    cms -->|6\. Res| next
 
     classDef aws fill:#FF9900,stroke:#FF8000,color:black;
     classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
@@ -141,6 +146,7 @@ flowchart TD
 
  
 ## TC1-1 : external routing
+
 ``` TC1-1
 ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
@@ -274,6 +280,7 @@ Status code distribution:
   [200] 48 responses
 ```
 ## TC2 : internal routing
+
 ``` TC2-1
 ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
@@ -409,6 +416,7 @@ Status code distribution:
 
 
 ## Conclusion 
+
 - **TC1 (External Routing)**
   - In each execution, the average response time is approximately 1.40 seconds.
   - The total number of requests (48 responses) and the requests per second (about 2.08 to 2.12) remain consistent.
@@ -416,11 +424,13 @@ Status code distribution:
   - Additional overhead may be present in DNS handling and connection setup.
 
 - **TC2 (Internal Routing)**
+
   - The average response time improves to approximately 1.21–1.26 seconds.
   - The requests per second improve slightly to around 2.30–2.45.
   - The response time distribution is more uniform and the maximum latency is marginally lower (around 2.0 seconds).
   - Reduced DNS lookups and lower network hops in internal communication contribute to this performance gain.
 
 **Conclusion:**
+
 Internal routing (TC2) shows modest improvements over external routing (TC1) in both response times and throughput, which can positively impact the overall user experience in real-time service environments.
 

@@ -1,6 +1,6 @@
-site_name: it뒷담
+site_name: IT 뒷담
 site_url: https://tnstory.github.io/
-site_description: "it뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
+site_description: "IT 뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
 site_author: "MinBae Lee"
 
 
@@ -16,12 +16,14 @@ theme:
     - toc.integrate
     - search.highlight
     - search.share
-
+    - content.code.copy
+  code:
+    highlight_theme: github-dark
 
 extra:
   meta:
-    description: "it뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
-    keywords: "it뒷담, Kubernetes, Cloud, GitOps, CNCF, AI, SpringBoot"
+    description: "IT 뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다."
+    keywords: "IT 뒷담, Kubernetes, Cloud, GitOps, CNCF, AI, SpringBoot"
     author: "MinBae Lee"
 
   social:
@@ -42,18 +44,17 @@ extra_css:
 
 plugins:
   - search
-  - mermaid2
   - i18n:
       languages:
         - locale: ko
           name: 한국어
           default: true
           build: true
-          site_name: "it 뒷담"
+          site_name: "IT 뒷담"
         - locale: en
           name: English
           build: true
-          site_name: "it Gossip"
+          site_name: "IT behind"
       docs_structure: folder
       fallback_to_default: true
       reconfigure_material: true
@@ -66,6 +67,12 @@ plugins:
 markdown_extensions:
   - toc:
       permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
 
 nav:
   - Home: index.md

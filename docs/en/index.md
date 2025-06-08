@@ -5,7 +5,7 @@ keywords: "itTalk, Kubernetes, Cloud, GitOps, CNCF, AI, SpringBoot"
 author: "MinBae Lee"
 ---
 
-# Welcome to it.Gossip
+# Welcome to IT behind
 
 This is a personal record page, where I aim to analyze technology trends from a subjective perspective.
 
