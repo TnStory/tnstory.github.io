@@ -1,123 +1,213 @@
 
-<!DOCTYPE html>
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IT 뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다.">
+      
+      
+        <meta name="author" content="MinBae Lee">
+      
+      
+        <link rel="canonical" href="https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../Docker_Image_Optimization_Guide/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon_io/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Kubernetes Service Discovery Performance - IT 뒷담</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
 
-<html class="no-js" lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="it뒷담은 it 트랜드를 가볍게 다뤄보는 공간입니다." name="description"/>
-<meta content="MinBae Lee" name="author"/>
-<link href="https://tnstory.github.io/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/" rel="canonical"/>
-<link href="../" rel="prev"/>
-<link href="../Docker_Image_Optimization_Guide/" rel="next"/>
-<link href="../../assets/images/favicon_io/favicon.ico" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.6.14" name="generator"/>
-<title>Kubernetes Service Discovery Performance - it 뒷담</title>
-<link href="../../assets/stylesheets/main.342714a4.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
-<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<link href="../../stylesheets/extra.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-</head>
-<body dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#kubernetes-service-discoverys-benefit-20250315">
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubernetes-service-discoverys-benefit-20250315" class="md-skip">
           콘텐츠로 이동
         </a>
-</div>
-<div data-md-component="announce">
-</div>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
 <header class="md-header" data-md-component="header">
-<nav aria-label="상단/헤더" class="md-header__inner md-grid">
-<a aria-label="it 뒷담" class="md-header__button md-logo" data-md-component="logo" href="../.." title="it 뒷담">
-<img alt="logo" src="../../assets/images/favicon_io/android-chrome-192x192.png"/>
-</a>
-<label class="md-header__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
-</label>
-<div class="md-header__title" data-md-component="header-title">
-<div class="md-header__ellipsis">
-<div class="md-header__topic">
-<span class="md-ellipsis">
-            it 뒷담
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="IT 뒷담" class="md-header__button md-logo" aria-label="IT 뒷담" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon_io/android-chrome-192x192.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IT 뒷담
           </span>
-</div>
-<div class="md-header__topic" data-md-component="header-topic">
-<span class="md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               Kubernetes Service Discovery Performance
             
           </span>
-</div>
-</div>
-</div>
-<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-<div class="md-header__option">
-<div class="md-select">
-<button aria-label="언어설정" class="md-header__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
-</button>
-<div class="md-select__inner">
-<ul class="md-select__list">
-<li class="md-select__item">
-<a class="md-select__link" href="./" hreflang="ko">
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="언어설정">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ko" class="md-select__link">
               한국어
             </a>
-</li>
-<li class="md-select__item">
-<a class="md-select__link" href="../../en/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/" hreflang="en">
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../en/PoC/Kubernetes_ServiceDiscovery_Performance_PoC/" hreflang="en" class="md-select__link">
               English
             </a>
-</li>
-</ul>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-<label class="md-header__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
-</label>
-<div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="검색" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="검색" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
-</label>
-<nav aria-label="검색" class="md-search__options">
-<a aria-label="공유" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="공유">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
-</a>
-<button aria-label="지우기" class="md-search__icon md-icon" tabindex="-1" title="지우기" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
-</button>
-</nav>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="공유" aria-label="공유" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             검색 초기화
           </div>
-<ol class="md-search-result__list" role="presentation"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</nav>
+      
+    
+    
+  </nav>
+  
 </header>
-<div class="md-container" data-md-component="container">
-<nav aria-label="탭" class="md-tabs" data-md-component="tabs">
-<div class="md-grid">
-<ul class="md-tabs__list">
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../..">
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -126,18 +216,39 @@
   Home
 
       </a>
-</li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../">
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
   PoC
 
         </a>
-</li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../aboutme/">
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../aboutme/" class="md-tabs__link">
         
   
   
@@ -146,256 +257,450 @@
   About Me
 
       </a>
-</li>
-</ul>
-</div>
+    </li>
+  
+
+      
+    </ul>
+  </div>
 </nav>
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="네비게이션" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="it 뒷담" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="it 뒷담">
-<img alt="logo" src="../../assets/images/favicon_io/android-chrome-192x192.png"/>
-</a>
-    it 뒷담
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IT 뒷담" class="md-nav__button md-logo" aria-label="IT 뒷담" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon_io/android-chrome-192x192.png" alt="logo">
+
+    </a>
+    IT 뒷담
   </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
-<span class="md-ellipsis">
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     Home
     
   </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
-<span class="md-ellipsis">
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
     PoC
     
   </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_2">
-<span class="md-nav__icon md-icon"></span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
             PoC
           </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../">
-<span class="md-ellipsis">
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     Overview
     
   </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
     Kubernetes Service Discovery Performance
     
   </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
     Kubernetes Service Discovery Performance
     
   </span>
-</a>
-<nav aria-label="목차" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       목차
     </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#poc">
-<span class="md-ellipsis">
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#poc" class="md-nav__link">
+    <span class="md-ellipsis">
       PoC
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#test-server-spec">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#test-server-spec" class="md-nav__link">
+    <span class="md-ellipsis">
       Test Server Spec
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#sw-install-in-nextjs-server-pod">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#sw-install-in-nextjs-server-pod" class="md-nav__link">
+    <span class="md-ellipsis">
       S/W install in next.js server Pod
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#eks-nextjs-pod-cms-pod-aws-rds-env">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#eks-nextjs-pod-cms-pod-aws-rds-env" class="md-nav__link">
+    <span class="md-ellipsis">
       EKS (next.js Pod --&gt; CMS Pod --&gt; AWS RDS ) Env
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#tc" class="md-nav__link">
+    <span class="md-ellipsis">
       TC
     </span>
-</a>
-<nav aria-label="TC" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc1">
-<span class="md-ellipsis">
+  </a>
+  
+    <nav class="md-nav" aria-label="TC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tc1" class="md-nav__link">
+    <span class="md-ellipsis">
       TC1 호출 흐름 (외부 라우팅)
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc2">
-<span class="md-ellipsis">
+        
+          <li class="md-nav__item">
+  <a href="#tc2" class="md-nav__link">
+    <span class="md-ellipsis">
       TC2 호출 흐름 (내부 라우팅)
     </span>
-</a>
+  </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc1-1-external-routing">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#tc1-1-external-routing" class="md-nav__link">
+    <span class="md-ellipsis">
       TC1-1 : external routing
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc2-internal-routing">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#tc2-internal-routing" class="md-nav__link">
+    <span class="md-ellipsis">
       TC2 : internal routing
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#_1">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
       결론
     </span>
-</a>
-<nav aria-label="결론" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc1_1">
-<span class="md-ellipsis">
+  </a>
+  
+    <nav class="md-nav" aria-label="결론">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tc1_1" class="md-nav__link">
+    <span class="md-ellipsis">
       TC1 (외부 라우팅)
     </span>
-</a>
+  </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#tc2_1">
-<span class="md-ellipsis">
+        
+          <li class="md-nav__item">
+  <a href="#tc2_1" class="md-nav__link">
+    <span class="md-ellipsis">
       TC2 (내부 라우팅)
     </span>
-</a>
+  </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#_2">
-<span class="md-ellipsis">
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
       종합 결론:
     </span>
-</a>
+  </a>
+  
 </li>
-</ul>
+      
+    </ul>
+  
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../Docker_Image_Optimization_Guide/">
-<span class="md-ellipsis">
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Docker_Image_Optimization_Guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     Docker Image Optimization Guide
     
   </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../aboutme/">
-<span class="md-ellipsis">
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aboutme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     About Me
     
   </span>
-</a>
-</li>
-</ul>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content" data-md-component="content">
-<article class="md-content__inner md-typeset">
-<h1 id="kubernetes-service-discoverys-benefit-20250315">Kubernetes Service Discovery's benefit [2025/03/15]<a class="headerlink" href="#kubernetes-service-discoverys-benefit-20250315" title="Permanent link">¶</a></h1>
-<h2 id="poc">PoC<a class="headerlink" href="#poc" title="Permanent link">¶</a></h2>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kubernetes-service-discoverys-benefit-20250315">Kubernetes Service Discovery's benefit [2025/03/15]<a class="headerlink" href="#kubernetes-service-discoverys-benefit-20250315" title="Permanent link">&para;</a></h1>
+<h2 id="poc">PoC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
 <pre><code>- Service Discovery를 사용하여 트패릭/비용 이점을 검증해 본다.
 - MicroService간 통신시 Istio(Service Mesh),gRPC 등을 사용하는 환경에서   
 당연히 사용해야 하는 Item이지만, 실무에서는 많이 놓치고 있는 실정인것 같다.
 </code></pre>
 <p><span style="color:#1976d2; font-weight:bold; font-size:1.1em;">
 결론 : 처음부터 Kubernetes FQDN 사용하도록 설계 하자.
-</span><br/>
-Kubernetes FQDN의 기본 구조<br>
-&lt;서비스 이름&gt;.&lt;네임스페이스&gt;.svc.cluster.local<br/>
-my-service.default.svc.cluster.local</br></p>
-<h2 id="test-server-spec">Test Server Spec<a class="headerlink" href="#test-server-spec" title="Permanent link">¶</a></h2>
+</span><br>
+Kubernetes FQDN의 기본 구조<br />
+&lt;서비스 이름&gt;.&lt;네임스페이스&gt;.svc.cluster.local<br />
+my-service.default.svc.cluster.local</p>
+<h2 id="test-server-spec">Test Server Spec<a class="headerlink" href="#test-server-spec" title="Permanent link">&para;</a></h2>
 <pre><code>- AWS EKS Cluster(t3.medium)
-  CMS Server Pod Deployment Spec
-        resources:
-          requests:
-            cpu: 1
-            memory: "1G"
-          limits:
-            cpu: 1
-            memory: "1G"
-
-    next.js Server Pod Deployment Spec
-        resources:
-          requests:
-            cpu: 200m
-            memory: 512Mi
-          limits:
-            cpu: 500m
-            memory: 728Mi
 </code></pre>
-<h2 id="sw-install-in-nextjs-server-pod">S/W install in next.js server Pod<a class="headerlink" href="#sw-install-in-nextjs-server-pod" title="Permanent link">¶</a></h2>
-<pre><code>wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey
-chmod +x hey
+<p><strong>CMS Server Pod Deployment Spec</strong></p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1G&quot;</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1G&quot;</span>
+</code></pre></div>
+<strong>next.js Server Pod Deployment Spec</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">728Mi</span>
+</code></pre></div>
+<h2 id="sw-install-in-nextjs-server-pod">S/W install in next.js server Pod<a class="headerlink" href="#sw-install-in-nextjs-server-pod" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64<span class="w"> </span>-O<span class="w"> </span>hey
+chmod<span class="w"> </span>+x<span class="w"> </span>hey
 
-./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
-</code></pre>
-<h2 id="eks-nextjs-pod-cms-pod-aws-rds-env">EKS (next.js Pod --&gt; CMS Pod --&gt; AWS RDS ) Env<a class="headerlink" href="#eks-nextjs-pod-cms-pod-aws-rds-env" title="Permanent link">¶</a></h2>
+./hey<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>http://localhost:3000/cms-api-endpoint
+</code></pre></div>
+<h2 id="eks-nextjs-pod-cms-pod-aws-rds-env">EKS (next.js Pod --&gt; CMS Pod --&gt; AWS RDS ) Env<a class="headerlink" href="#eks-nextjs-pod-cms-pod-aws-rds-env" title="Permanent link">&para;</a></h2>
 <ul>
 <li>DNS : Route53</li>
 <li>Use AWS ALB</li>
 </ul>
-<h2 id="tc">TC<a class="headerlink" href="#tc" title="Permanent link">¶</a></h2>
+<h2 id="tc">TC<a class="headerlink" href="#tc" title="Permanent link">&para;</a></h2>
 <pre><code>- TC1 : next.js --&gt; public dns domain --&gt; CMS Pod // external routing
     http://cms.server.com
 
 - TC2 : next.js --&gt; Service Discovery --&gt; CMS Pod // internal routing
     http://cms-service.namespace.svc.cluster.local
-    // http://craftcms.easytask.svc.cluster.local
 </code></pre>
-<h3 id="tc1">TC1 호출 흐름 (외부 라우팅)<a class="headerlink" href="#tc1" title="Permanent link">¶</a></h3>
-<div class="mermaid">flowchart TD
+<h3 id="tc1">TC1 호출 흐름 (외부 라우팅)<a class="headerlink" href="#tc1" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
     subgraph "EKS Cluster"
         subgraph "Next.js Pod"
             next[Next.js Server]
@@ -409,7 +714,7 @@ chmod +x hey
     end
 
     subgraph "AWS Services"
-        route53[Route53\nDNS]
+        route53[Route53&lt;br&gt;DNS]
         style route53 fill:#FF9900,stroke:#FF8000,color:black
 
         alb[AWS ALB]
@@ -419,30 +724,29 @@ chmod +x hey
         style rds fill:#FF9900,stroke:#FF8000,color:black
     end
 
-    next --&gt;|1. API 요청\nhttp://cms.server.com| route53
-    route53 --&gt;|2. DNS 확인| next
-    next --&gt;|3. 요청| alb
-    alb --&gt;|4. 라우팅| cms
-    cms --&gt;|5. 데이터 쿼리| rds
-    rds --&gt;|6. 응답| cms
-    cms --&gt;|7. 응답| alb
-    alb --&gt;|8. 응답| next
+    next --&gt;|1\. DNS Query| route53
+    route53 --&gt;|2\. DNS Resolve| next
+    next --&gt;|3\. API Req&lt;br&gt;cms.server.com| alb
+    alb --&gt;|4\. Route| cms
+    cms --&gt;|5\. Data Fetch| rds
+    rds --&gt;|6\. Res| cms
+    cms --&gt;|7\. Res| alb
+    alb --&gt;|8\. Res| next
 
     classDef aws fill:#FF9900,stroke:#FF8000,color:black;
     classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
 
     class route53,alb,rds aws;
-    class next,cms k8s;
-</div>
-<h3 id="tc2">TC2 호출 흐름 (내부 라우팅)<a class="headerlink" href="#tc2" title="Permanent link">¶</a></h3>
-<div class="mermaid">flowchart TD
+    class next,cms k8s;</code></pre>
+<h3 id="tc2">TC2 호출 흐름 (내부 라우팅)<a class="headerlink" href="#tc2" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
     subgraph "EKS Cluster"
         subgraph "Next.js Pod"
             next[Next.js Server]
             style next fill:#1E88E5,stroke:#0D47A1,color:white
         end
 
-        k8ssd[Kubernetes\nService Discovery]
+        k8ssd[Kubernetes&lt;br&gt;Service Discovery]
         style k8ssd fill:#326CE5,stroke:#2350BD,color:white
 
         subgraph "CMS Pod"
@@ -456,21 +760,20 @@ chmod +x hey
         style rds fill:#FF9900,stroke:#FF8000,color:black
     end
 
-    next --&gt;|1. API 요청\nhttp://cms-service.namespace.svc.cluster.local| k8ssd
-    k8ssd --&gt;|2. 서비스 확인| next
-    next --&gt;|3. 직접 요청| cms
-    cms --&gt;|4. 데이터 쿼리| rds
-    rds --&gt;|5. 응답| cms
-    cms --&gt;|6. 응답| next
+    next --&gt;|1\. FQDN Query| k8ssd
+    k8ssd --&gt;|2\. FQDN Resolve| next
+    next --&gt;|3\. cms-service.namespace.svc.cluster.local| cms
+    cms --&gt;|4\. Data Fetch| rds
+    rds --&gt;|5\. Res| cms
+    cms --&gt;|6\. Res| next
 
     classDef aws fill:#FF9900,stroke:#FF8000,color:black;
     classDef k8s fill:#326CE5,stroke:#2350BD,color:white;
 
     class rds aws;
-    class next,cms,k8ssd k8s;
-</div>
-<h2 id="tc1-1-external-routing">TC1-1 : external routing<a class="headerlink" href="#tc1-1-external-routing" title="Permanent link">¶</a></h2>
-<pre><code class="language-TC1-1">./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+    class next,cms,k8ssd k8s;</code></pre>
+<h2 id="tc1-1-external-routing">TC1-1 : external routing<a class="headerlink" href="#tc1-1-external-routing" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        23.0148 secs
@@ -512,8 +815,8 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<pre><code class="language-TC1-2"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        23.3135 secs
@@ -555,8 +858,8 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<pre><code class="language-TC1-3"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        22.6327 secs
@@ -598,9 +901,9 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<h2 id="tc2-internal-routing">TC2 : internal routing<a class="headerlink" href="#tc2-internal-routing" title="Permanent link">¶</a></h2>
-<pre><code class="language-TC2-1">./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre></div></p>
+<h2 id="tc2-internal-routing">TC2 : internal routing<a class="headerlink" href="#tc2-internal-routing" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        20.8464 secs
@@ -642,8 +945,8 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<pre><code class="language-TC2-2"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        19.5824 secs
@@ -685,8 +988,8 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<pre><code class="language-TC2-3"> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code> ./hey -n 50 -c 3 http://localhost:3000/cms-api-endpoint
 
 Summary:
   Total:        20.0755 secs
@@ -728,54 +1031,91 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200] 48 responses
-</code></pre>
-<h2 id="_1">결론<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<h3 id="tc1_1">TC1 (외부 라우팅)<a class="headerlink" href="#tc1_1" title="Permanent link">¶</a></h3>
+</code></pre></div></p>
+<h2 id="_1">결론<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="tc1_1">TC1 (외부 라우팅)<a class="headerlink" href="#tc1_1" title="Permanent link">&para;</a></h3>
 <p>각 실행에서 평균 응답 시간은 약 1.40초입니다.</p>
 <p>전체 응답 수(48건)와 초당 요청 수(약 2.08~2.12)는 일정하게 유지됩니다.</p>
 <p>응답 시간 히스토그램을 보면 가장 빠른 응답은 약 0.64초, 가장 느린 응답은 약 2.4초로, 응답 시간에 다소 변동성이 있습니다.</p>
 <p>DNS 처리 및 연결 설정 과정에서의 오버헤드가 존재할 수 있습니다.</p>
-<h3 id="tc2_1">TC2 (내부 라우팅)<a class="headerlink" href="#tc2_1" title="Permanent link">¶</a></h3>
+<h3 id="tc2_1">TC2 (내부 라우팅)<a class="headerlink" href="#tc2_1" title="Permanent link">&para;</a></h3>
 <p>평균 응답 시간이 약 1.21~1.26초로 개선됩니다.</p>
 <p>초당 요청 수는 약 2.30~2.45로 소폭 증가합니다.</p>
 <p>응답 시간 분포는 좀 더 균일하고, 최대 지연 시간도 약 2.0초로 다소 낮아집니다.</p>
 <p>내부 통신에서의 DNS 조회 감소 및 네트워크 홉 수 감소가 성능 향상에 기여합니다.</p>
-<h2 id="_2">종합 결론:<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
+<h2 id="_2">종합 결론:<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>내부 라우팅(TC2)은 외부 라우팅(TC1) 대비 응답 시간과 처리량 면에서 소폭 향상된 성능을 보이며, 이는 실시간 서비스 환경에서 사용자 경험을 긍정적으로 향상시킬 수 있습니다.</p>
-</article>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-</div>
-<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
   맨위로
 </button>
-</main>
-<footer class="md-footer">
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-copyright">
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
     </a>
+  
 </div>
-<div class="md-social">
-<a class="md-social__link" href="https://tnstory.github.io/" rel="noopener" target="_blank" title="GitHub">
-<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
-</a>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://tnstory.github.io/" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
 </div>
-</div>
-</div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<div class="md-dialog" data-md-component="dialog">
-<div class="md-dialog__inner md-typeset"></div>
-</div>
-<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.top", "toc.integrate", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
-<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
-mermaid.initialize({});</script></body>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
 </html>
