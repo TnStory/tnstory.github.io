@@ -42,3 +42,11 @@ body,
   padding-left: 1rem;      /* 글자가 너무 붙지 않도록 여백 */
   border-radius: .25rem;   /* 살짝 둥글게 (선택) */
 }
+
+/* 모바일 환경에서의 스타일 */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset pre > code {
+    padding-left: 2px;      /* 모바일에서 왼쪽 패딩 2px */
+    border-radius: 1rem;   /* 더 둥글게 수정 */
+  }
+}
