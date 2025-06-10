@@ -8,6 +8,8 @@
 
 ## Plugin
 
+- pip install mkdocs
+- pip install --upgrade pip
 - pip install mkdocs-material
 - pip install mkdocs-mermaid2-plugin
 - pip install mkdocs-static-i18n
