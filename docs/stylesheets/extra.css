@@ -43,3 +43,9 @@ body,
   border-radius: 1rem;   /* 살짝 둥글게 (선택) */
 }
 
+@media (max-width: 600px) {
+  .md-typeset pre > code {
+    padding-left: calc(1rem + 2px); /* 기존 padding에 2px만 추가 */
+  }
+}
+
