@@ -43,9 +43,9 @@ body,
   border-radius: 1rem;   /* 살짝 둥글게 (선택) */
 }
 
-/* 모바일 환경에서의 스타일 */
-@media screen and (max-width: 44.9844em) {
+@media (max-width: 600px) {
   .md-typeset pre > code {
-    padding-left: 1rem;      /* 모바일에서 왼쪽 패딩  */
+    padding-left: calc(1rem + 2px); /* 기존 padding에 2px만 추가 */
   }
 }
+

@@ -12,13 +12,9 @@
         <meta name="author" content="MinBae Lee">
       
       
-        <link rel="canonical" href="https://tnstory.github.io/en/PoC/Docker_Image_Optimization_Guide/">
+        <link rel="canonical" href="https://tnstory.github.io/en/GreenHouse/EarthTube/">
       
       
-        <link rel="prev" href="../Kubernetes_ServiceDiscovery_Performance_PoC/">
-      
-      
-        <link rel="next" href="../../GreenHouse/">
       
       
       <link rel="icon" href="../../../assets/images/favicon_io/favicon.ico">
@@ -26,7 +22,7 @@
     
     
       
-        <title>Docker Image Optimization Guide - IT behind</title>
+        <title>200평 비닐하우스 기준 지중 열교환 시스템 정리 - IT behind</title>
       
     
     
@@ -70,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#docker-image-optimization-guide" class="md-skip">
+        <a href="#200" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docker Image Optimization Guide
+              200평 비닐하우스 기준 지중 열교환 시스템 정리
             
           </span>
         </div>
@@ -124,7 +120,7 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../PoC/Docker_Image_Optimization_Guide/" hreflang="ko" class="md-select__link">
+            <a href="../../../GreenHouse/EarthTube/" hreflang="ko" class="md-select__link">
               한국어
             </a>
           </li>
@@ -224,13 +220,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../PoC/" class="md-tabs__link">
           
   
   
@@ -250,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../GreenHouse/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -341,29 +335,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -376,7 +365,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             PoC
@@ -390,7 +379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../PoC/" class="md-nav__link">
         
   
   
@@ -413,7 +402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Kubernetes_ServiceDiscovery_Performance_PoC/" class="md-nav__link">
+      <a href="../../PoC/Kubernetes_ServiceDiscovery_Performance_PoC/" class="md-nav__link">
         
   
   
@@ -433,32 +422,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Docker Image Optimization Guide
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../PoC/Docker_Image_Optimization_Guide/" class="md-nav__link">
         
   
   
@@ -469,86 +436,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-why-optimize" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Why Optimize?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-optimization-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Optimization Methods
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-java-application-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Java Application Optimization
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Java Application Optimization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gradle-jib" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gradle Jib
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#graalvm" class="md-nav__link">
-    <span class="md-ellipsis">
-      GraalVM
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-considerations-for-deploying-third-party-applications" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Considerations for Deploying Third-Party Applications
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -609,7 +496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../GreenHouse/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -670,95 +557,233 @@
 
 
 
-<h1 id="docker-image-optimization-guide">Docker Image Optimization Guide<a class="headerlink" href="#docker-image-optimization-guide" title="Permanent link">&para;</a></h1>
-<p>Docker image optimization and summarizes various methods to achieve it. <br />
-It also covers the pros and cons of Gradle Jib and GraalVM for Java applications, <br />
-along with considerations for deploying third-party applications.</p>
-<p><span style="color:#1976d2; font-weight:bold; font-size:1.1em;">
-Conclusion: Java works best with Gradle Jib — it's well-optimized and simple to use.<br>
-Consider using BuildPack as well, which is an official standard under the CNCF.
-</span><br></p>
+<h1 id="200">200평 비닐하우스 기준 지중 열교환 시스템 정리<a class="headerlink" href="#200" title="Permanent link">&para;</a></h1>
+<h2 id="1">✅ 1. 시스템 개요<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📦 대상</td>
+<td>200평(약 660㎡) 비닐하우스 1동</td>
+</tr>
+<tr>
+<td>🌀 방식</td>
+<td>공기 순환형 지중 열교환 (Earth Tube)</td>
+</tr>
+<tr>
+<td>🌡 목적</td>
+<td>지중 안정 온도(연평균 약 13~15℃)를 활용한 냉방/가온</td>
+</tr>
+<tr>
+<td>🔄 구조</td>
+<td>외기 또는 내기를 관으로 유입 → 지중 열과 열교환 → 하우스 내 공급</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="1-why-optimize">1. Why Optimize?<a class="headerlink" href="#1-why-optimize" title="Permanent link">&para;</a></h2>
-<ul>
-<li>
-<p><strong>Faster Deployment:</strong><br />
-  A smaller image size reduces network transfer time, thereby speeding up the overall deployment process.</p>
-</li>
-<li>
-<p><strong>Enhanced Security:</strong><br />
-  Removing unnecessary packages and files minimizes the attack surface.</p>
-</li>
-<li>
-<p><strong>Resource Efficiency:</strong><br />
-  Optimizing images reduces storage requirements and lowers memory usage during container execution.</p>
-</li>
-</ul>
+<h2 id="2">✅ 2. 주요 자재 및 사양<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>지중 관 종류</td>
+<td>HDPE 이중벽 코르게이트관 (주름관)</td>
+</tr>
+<tr>
+<td>직경</td>
+<td>Ø150mm (6인치) 권장</td>
+</tr>
+<tr>
+<td>길이</td>
+<td>50m/줄 × 7줄 이상</td>
+</tr>
+<tr>
+<td>유속</td>
+<td>2~4 m/s</td>
+</tr>
+<tr>
+<td>지중 깊이</td>
+<td>1.5~2.5m</td>
+</tr>
+<tr>
+<td>구배</td>
+<td>1도 이상</td>
+</tr>
+<tr>
+<td>구성</td>
+<td>공기흡입구, 매설관, 집입 팬, 내부 배기구, 역류 방지, 결로 배수</td>
+</tr>
+<tr>
+<td>부속품</td>
+<td>Y형 분기, 연통 커플러, 역류댐퍼, 드레인관 등</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="2-optimization-methods">2. Optimization Methods<a class="headerlink" href="#2-optimization-methods" title="Permanent link">&para;</a></h2>
+<h2 id="3">✅ 3. 열교환 이론 및 계산 요약<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h3 id="_1">🔸 지중 열교환 원리<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>
-<p><strong>Use Minimal Base Images:</strong><br />
-  Opt for lightweight base images such as Alpine or distroless.</p>
-</li>
-<li>
-<p><strong>Multi-Stage Builds:</strong><br />
-  Separate the build tools from the runtime environment to ensure that only the necessary files are included in the final image.</p>
-</li>
-<li>
-<p><strong>Cache Optimization &amp; Command Consolidation:</strong><br />
-  Combine <code>RUN</code> commands to reduce the number of layers and efficiently utilize build cache.</p>
-</li>
-<li>
-<p><strong>Remove Unnecessary Files:</strong><br />
-  Delete temporary files and cache data after the build process.</p>
-</li>
-<li>
-<p><strong>Use .dockerignore:</strong><br />
-  Exclude unnecessary files from the build context to improve build speed.</p>
-</li>
-<li>
-<p><strong>Utilize Docker Slim:</strong><br />
-  Docker Slim analyzes your existing images and removes redundant files and configurations, significantly reducing the image size.<br />
-<a href="https://github.com/slimtoolkit/slim">Learn more</a></p>
-</li>
+<li>공기를 지중에 일정 시간 체류시키며 지중 온도(13~15℃)와 열교환</li>
 </ul>
+<h3 id="_2">🔸 출구 온도 결정 인자<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>변수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>관 길이</td>
+<td>체류 시간 ↑ → 열교환 ↑</td>
+</tr>
+<tr>
+<td>관 직경</td>
+<td>공기량 및 열전달면 ↑</td>
+</tr>
+<tr>
+<td>유입 공기 속도</td>
+<td>속도 ↓ → 체류 시간 ↑ → 냉방 효과 ↑</td>
+</tr>
+<tr>
+<td>토양 온도</td>
+<td>연중 약 13~15℃ 유지 (지하 1.5m 이하 기준)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35c-14c">🔸 온도 예시 (외기 35℃, 지중 14℃ 기준)<a class="headerlink" href="#35c-14c" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>직경</th>
+<th>속도 2 m/s</th>
+<th>속도 4 m/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ø150mm</td>
+<td>약 21.4℃</td>
+<td>약 28.6℃</td>
+</tr>
+<tr>
+<td>Ø200mm</td>
+<td>약 20.5℃</td>
+<td>약 26.6℃</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="3-java-application-optimization">3. Java Application Optimization<a class="headerlink" href="#3-java-application-optimization" title="Permanent link">&para;</a></h2>
-<h3 id="gradle-jib">Gradle Jib<a class="headerlink" href="#gradle-jib" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Advantages:</strong></li>
-<li>Enables container image creation directly from the Gradle build without the need for a Dockerfile.</li>
-<li>
-<p>Leverages build cache to shorten image creation time and automatically optimizes image layers.</p>
-</li>
-<li>
-<p><strong>Disadvantages:</strong></p>
-</li>
-<li>May be limited when extensive customization is required.</li>
-<li>Offers a higher level of abstraction compared to Dockerfiles, making granular control more challenging.</li>
-</ul>
-<p><a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin">Gradle Jib Plugin on GitHub</a></p>
-<h3 id="graalvm">GraalVM<a class="headerlink" href="#graalvm" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Advantages:</strong></li>
-<li>Native image generation can dramatically improve application startup speed and reduce memory usage.</li>
-<li>
-<p>Offers fast boot times and low runtime overhead.</p>
-</li>
-<li>
-<p><strong>Disadvantages:</strong></p>
-</li>
-<li>Native image generation can be time-consuming and complicates the build process.</li>
-<li>Restrictions on dynamic features or reflection may require code modifications or additional configurations.</li>
-</ul>
-<p><a href="https://www.graalvm.org/">GraalVM Official Website</a></p>
+<h2 id="4">✅ 4. 설치 예산 (기초 기준)<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>단가</th>
+<th>수량</th>
+<th>금액 (원)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>지중 관 (150mm×50m)</td>
+<td>25,000</td>
+<td>7줄</td>
+<td>175,000</td>
+</tr>
+<tr>
+<td>차광막 (4,000원/평)</td>
+<td>4,000</td>
+<td>200평</td>
+<td>800,000</td>
+</tr>
+<tr>
+<td>냉난방/제어 설비</td>
+<td>-</td>
+<td>1식</td>
+<td>5,000,000</td>
+</tr>
+<tr>
+<td><strong>총계</strong></td>
+<td></td>
+<td></td>
+<td><strong>약 597만 원</strong></td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="4-considerations-for-deploying-third-party-applications">4. Considerations for Deploying Third-Party Applications<a class="headerlink" href="#4-considerations-for-deploying-third-party-applications" title="Permanent link">&para;</a></h2>
+<h2 id="5">✅ 5. 시스템 운영 특징<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>계절</th>
+<th>역할</th>
+<th>출구 온도 기대</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>여름</td>
+<td>냉방 보조 (35℃ → 23℃대)</td>
+<td>22~25℃</td>
+</tr>
+<tr>
+<td>겨울</td>
+<td>가온 보조 (-10℃ → 13~15℃)</td>
+<td>13~15℃</td>
+</tr>
+<tr>
+<td>야간</td>
+<td>온도 유지용</td>
+<td>온도 스윙 감소</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6">✅ 6. 비교 및 주의점<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>전기·연료 사용량 감소</td>
+<td>초기 굴착 비용</td>
+</tr>
+<tr>
+<td>지중온도는 연중 일정</td>
+<td>결로·배수 구조 필수</td>
+</tr>
+<tr>
+<td>유지비 거의 없음</td>
+<td>설치 후 배관 교체 어려움</td>
+</tr>
+<tr>
+<td>무소음, 친환경</td>
+<td>내부 먼지/세균 유입 주의</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7">✅ 7. 결론 및 권장 사항<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
 <ul>
-<li>It is recommended to leverage the deployment methods and images provided by third parties.</li>
-<li>Attempting custom optimizations may have limited benefits while increasing complexity and deployment difficulty.</li>
-<li>Based on practical experience, it is more efficient to use the provided images as-is or with minimal modifications for third-party applications.</li>
+<li>200평 규모에서 지중 열교환 시스템은 여름·겨울 모두 효과적</li>
+<li>딸기 고설 재배 등 정온 작물에서 매우 유리</li>
+<li>Ø150mm 관 7줄 이상, 깊이 2m 내외, 팬 연동 제어 권장</li>
 </ul>
 
 
