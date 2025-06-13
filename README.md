@@ -14,6 +14,8 @@
 - pip install mkdocs-mermaid2-plugin
 - pip install mkdocs-static-i18n
 - pip install --upgrade mkdocs-static-i18n
+- pip install mkdocs-table-reader-plugin
+
 
 
 ## local 

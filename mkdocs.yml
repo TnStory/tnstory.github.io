@@ -59,7 +59,9 @@ plugins:
       fallback_to_default: true
       reconfigure_material: true
       reconfigure_search: true
+  - table-reader
 
+    
   # - sitemap:
   #     changefreq: monthly
   #     priority: 0.5
@@ -80,6 +82,8 @@ nav:
       - Overview: PoC.md
       - Kubernetes Service Discovery Performance: PoC/Kubernetes_ServiceDiscovery_Performance_PoC.md
       - Docker Image Optimization Guide: PoC/Docker_Image_Optimization_Guide.md
+  - GreenHouse:
+      - Overview: GreenHouse.md
   - About Me: aboutme.md
 
 
