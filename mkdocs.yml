@@ -74,6 +74,10 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  # 펼치기/접기 ??? + 
+  # note, tip, warning, info, danger
+  # ??? warning 이렇게 사용
 
 
 nav:

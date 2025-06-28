@@ -15,7 +15,7 @@
 - pip install mkdocs-static-i18n
 - pip install --upgrade mkdocs-static-i18n
 - pip install mkdocs-table-reader-plugin
-
+- pip install pymdown-extensions
 
 
 ## local 
